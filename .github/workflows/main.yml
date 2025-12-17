@@ -30,7 +30,7 @@ jobs:
         cp -rf inc/flashdb.h $TEST_BSP_ROOT/packages/FlashDB/inc/flashdb.h
         /opt/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc --version
         if [ "${{ matrix.fixed_blob }}" -eq 1 ]; then
-          scons -j$(nproc) -C $TEST_BSP_ROOT FDB_TSDB_FIXED_BLOB_SIZE=4
+          scons -j$(nproc) -C $TEST_BSP_ROOT CFLAGS="-DFDB_TSDB_FIXED_BLOB_SIZE=4"
         else
           scons -j$(nproc) -C $TEST_BSP_ROOT
         fi
