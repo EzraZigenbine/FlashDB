@@ -26,6 +26,10 @@
 #define TEST_SECTOR_SIZE              4096
 #define TEST_TIME_STEP                2
 
+#ifdef FDB_TSDB_FIXED_BLOB_SIZE
+#error test including macro
+#endif
+
 struct test_tls_data {
     int data;
     fdb_time_t time;
