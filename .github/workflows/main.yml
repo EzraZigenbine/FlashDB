@@ -4,6 +4,9 @@ jobs:
   test:
     name: AutoTest
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        fixed_blob: [0, 1]  # 0 = not defined, 1 = defined
     env:
       TEST_BSP_ROOT: ../AutoTestBsp
       UTEST_RUNNER_PATH: ../UtestRunner
@@ -26,7 +29,11 @@ jobs:
         cp -rf inc/fdb_low_lvl.h $TEST_BSP_ROOT/packages/FlashDB/inc/fdb_low_lvl.h
         cp -rf inc/flashdb.h $TEST_BSP_ROOT/packages/FlashDB/inc/flashdb.h
         /opt/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc --version
-        scons -j$(nproc) -C $TEST_BSP_ROOT
+        if [ "${{ matrix.fixed_blob }}" -eq 1 ]; then
+          scons -j$(nproc) -C $TEST_BSP_ROOT FDB_TSDB_FIXED_BLOB_SIZE=4
+        else
+          scons -j$(nproc) -C $TEST_BSP_ROOT
+        fi
     - name: Start test
       run: |
         python3 $UTEST_RUNNER_PATH/qemu_runner.py --elf $TEST_BSP_ROOT/rtthread.elf --sd $TEST_BSP_ROOT/sd.bin
